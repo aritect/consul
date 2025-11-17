@@ -1,0 +1,31 @@
+# logs
+**/logs/
+**/*.log
+
+# runtime data
+**/pids/
+**/*.pid
+**/*.seed
+**/.DS_Store
+**/*.heapsnapshot
+
+# editors
+**/.idea/
+**/.vscode/
+
+# ropeproject
+**/.ropeproject
+
+# build
+**/target/
+**/.astro/
+**/.tanstack/
+
+# modules
+**/node_modules/
+
+# environment variables
+.nexusrc
+.env.development
+.env.public.production
+.env.private.production

@@ -1,0 +1,31 @@
+# logs
+logs
+*.log
+
+# runtime data
+pids
+*.pid
+*.seed
+.DS_Store
+*.heapsnapshot
+
+# editors
+.idea
+.vscode
+
+# environment
+environment
+
+# ropeproject
+.ropeproject
+
+# environment variables
+.nexusrc
+.env.production
+.env.development
+
+# build
+target
+
+# modules
+node_modules
