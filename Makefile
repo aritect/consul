@@ -1,5 +1,6 @@
 REGISTRY := docker-hosted.nexus.infrastructure.alxshelepenok.com
 CONSUL_IMAGE := aritect/consul
+TAG := latest
 
 DOCKER_BUILD = docker build
 DOCKER_TAG = docker tag
@@ -20,7 +21,7 @@ endef
 define build_service
 	@echo "Building $(1) service..."
 	$(call check_nexus_vars)
-	$(DOCKER_BUILD) -f infrastructure/images/$(1).Dockerfile -t $(2):$(TAG) $(NEXUS_BUILD_ARGS) $(3) .
+	$(DOCKER_BUILD) -f Dockerfile -t $(2):$(TAG) $(NEXUS_BUILD_ARGS) $(3) .
 endef
 
 define push_service

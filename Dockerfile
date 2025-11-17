@@ -4,13 +4,11 @@ WORKDIR /workspace
 
 RUN apk add --no-cache git
 
-COPY cmd/consul-telegram-bot/go.mod cmd/consul-telegram-bot/go.sum ./cmd/consul-telegram-bot/
+COPY . .
 
-WORKDIR /workspace/cmd/consul-telegram-bot
+WORKDIR /workspace
 
 RUN go mod download
-
-COPY cmd/consul-telegram-bot/ ./
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o target/consul-telegram-bot ./cmd/consul-telegram-bot
 
@@ -28,7 +26,7 @@ RUN mkdir -p /workspace/data && \
 
 USER aritect
 
-COPY --from=builder /workspace/cmd/consul-telegram-bot/target/consul-telegram-bot ./consul-telegram-bot
+COPY --from=builder /workspace/target/consul-telegram-bot ./consul-telegram-bot
 
 EXPOSE 8080
 
