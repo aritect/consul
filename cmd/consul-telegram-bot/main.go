@@ -12,11 +12,29 @@ import (
 	telebot "gopkg.in/telebot.v3"
 )
 
-func startUpdatesListener(botInstance *bot.Bot, routerInstance *router.Router) {
+func deleteServiceMessage(botInstance *bot.Bot, loggerInstance *logger.Logger, eventType string) func(telebot.Context) error {
+	return func(c telebot.Context) error {
+		msg := c.Message()
+		if msg != nil {
+			loggerInstance.Info("deleting service message (%s) in chat %d", eventType, msg.Chat.ID)
+			err := botInstance.Bot.Delete(msg)
+			if err != nil {
+				loggerInstance.Error("failed to delete service message: %s", err)
+			}
+		}
+		return nil
+	}
+}
+
+func startUpdatesListener(botInstance *bot.Bot, routerInstance *router.Router, loggerInstance *logger.Logger) {
 	botInstance.Bot.Handle(telebot.OnText, func(c telebot.Context) error {
 		routerInstance.HandleTextMessage(c.Message())
 		return nil
 	})
+
+	botInstance.Bot.Handle(telebot.OnUserJoined, deleteServiceMessage(botInstance, loggerInstance, "user_joined"))
+	botInstance.Bot.Handle(telebot.OnUserLeft, deleteServiceMessage(botInstance, loggerInstance, "user_left"))
+	botInstance.Bot.Handle(telebot.OnAddedToGroup, deleteServiceMessage(botInstance, loggerInstance, "added_to_group"))
 }
 
 func configureKeyboard(botInstance *bot.Bot) {
@@ -71,7 +89,7 @@ func main() {
 	configureCommands(routerInstance)
 	configureKeyboard(botInstance)
 
-	go startUpdatesListener(botInstance, routerInstance)
+	go startUpdatesListener(botInstance, routerInstance, loggerInstance)
 
 	botInstance.Start(8)
 }
