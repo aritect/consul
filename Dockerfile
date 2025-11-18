@@ -27,6 +27,7 @@ RUN mkdir -p /workspace/data && \
 USER aritect
 
 COPY --from=builder /workspace/target/consul-telegram-bot ./consul-telegram-bot
+COPY --from=builder /workspace/assets ./assets
 
 EXPOSE 8080
 
