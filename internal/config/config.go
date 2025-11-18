@@ -13,7 +13,9 @@ type Config struct {
 	TokenAddress     string
 	ArbiterBotURL    string
 	AgarthaBotURL    string
-	ChartURL         string
+	DexscreenerUrl   string
+	AxiomUrl         string
+	HeliusRpcURL     string
 }
 
 func New() *Config {
@@ -25,7 +27,9 @@ func New() *Config {
 		TokenAddress:     getEnvString("TOKEN_ADDRESS"),
 		ArbiterBotURL:    getEnvString("ARBITER_BOT_URL"),
 		AgarthaBotURL:    getEnvString("AGARTHA_BOT_URL"),
-		ChartURL:         getEnvString("CHART_URL"),
+		DexscreenerUrl:   getEnvString("DEXSCREENER_URL"),
+		AxiomUrl:         getEnvString("AXIOM_URL"),
+		HeliusRpcURL:     getEnvString("HELIUS_RPC_URL"),
 	}
 }
 

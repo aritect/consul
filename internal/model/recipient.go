@@ -21,14 +21,11 @@ const (
 )
 
 type Recipient struct {
-	Id                       int64
-	Type                     RecipientType
-	ThreadId                 int
-	DexMarketThreadId        int
-	DexMarketComplexThreadId int
-	DexTokenLaunchThreadId   int
-	DexscreenerOrderThreadId int
-	Receiving                int64
+	Id                  int64
+	Type                RecipientType
+	ThreadId            int
+	AritectBuysThreadId int
+	Receiving           int64
 }
 
 func NewRecipient(id int64, recipientType RecipientType, threadId int) (*Recipient, error) {
@@ -99,6 +96,22 @@ func (r *Recipient) IsEnabledReceiving() bool {
 
 func (r *Recipient) DefineThreadId(threadId int) {
 	r.ThreadId = threadId
+}
+
+func (r *Recipient) DefineThreadIdForSignalType(signalType SignalType, threadId int) {
+	switch signalType {
+	case SignalTypeAritectBuys:
+		r.AritectBuysThreadId = threadId
+	}
+}
+
+func (r *Recipient) GetThreadIdForSignalType(signalType SignalType) int {
+	switch signalType {
+	case SignalTypeAritectBuys:
+		return r.AritectBuysThreadId
+	default:
+		return 0
+	}
 }
 
 func (r *Recipient) DeleteSelf() error {

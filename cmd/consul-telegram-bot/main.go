@@ -2,6 +2,7 @@ package main
 
 import (
 	"consul-telegram-bot/internal/bot"
+	"consul-telegram-bot/internal/buybot"
 	"consul-telegram-bot/internal/commands"
 	"consul-telegram-bot/internal/config"
 	"consul-telegram-bot/internal/logger"
@@ -54,6 +55,7 @@ func configureCommands(routerInstance *router.Router) {
 	routerInstance.AddCommand("/arbiter", commands.Arbiter)
 	routerInstance.AddCommand("/agartha", commands.Agartha)
 	routerInstance.AddCommand("/chart", commands.Chart)
+	routerInstance.AddCommand("/define_thread_id", commands.DefineThreadId)
 
 	routerInstance.LinkingButton("Help", "/help")
 	routerInstance.LinkingButton("Id", "/id")
@@ -90,6 +92,22 @@ func main() {
 	configureKeyboard(botInstance)
 
 	go startUpdatesListener(botInstance, routerInstance, loggerInstance)
+
+	if configInstance.HeliusRpcURL != "" && configInstance.TokenAddress != "" {
+		loggerInstance.Info("starting Aritect buy bot...")
+		heliusClient := buybot.NewHeliusClient(configInstance.HeliusRpcURL)
+		monitor := buybot.NewMonitor(heliusClient, loggerInstance, configInstance.TokenAddress)
+		signalSender := buybot.NewSignalSender(botInstance, loggerInstance, configInstance.DexscreenerUrl, configInstance.AxiomUrl)
+
+		monitor.SetBuyHandler(func(buyTx *buybot.BuyTransaction) {
+			signalSender.SendBuySignal(buyTx)
+		})
+
+		go monitor.Start()
+		loggerInstance.Info("Aritect buy bot started successfully")
+	} else {
+		loggerInstance.Info("Helius RPC URL or Token Address not configured, buy bot disabled")
+	}
 
 	botInstance.Start(8)
 }

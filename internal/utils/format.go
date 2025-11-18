@@ -7,72 +7,6 @@ import (
 	"strings"
 )
 
-func FormatChainName(chainId string) string {
-	switch strings.ToLower(chainId) {
-	case "ethereum":
-		return "Ethereum"
-	case "bsc":
-		return "BSC"
-	case "avalanche":
-		return "Avalanche"
-	case "polygon":
-		return "Polygon"
-	case "base":
-		return "Base"
-	case "hyperliquid":
-		return "Hyperliquid"
-	case "ton":
-		return "TON"
-	case "tron":
-		return "Tron"
-	case "solana":
-		return "Solana"
-	default:
-		return "Unknown"
-	}
-}
-
-func FormatPlatformName(platformId string) string {
-	switch strings.ToLower(platformId) {
-	case "pumpfun":
-		return "Pumpfun"
-	case "pumpswap":
-		return "Pumpswap"
-	case "raydium":
-		return "Raydium"
-	case "launchlab":
-		return "Launchlab"
-	case "meteora":
-		return "Meteora"
-	case "moonit":
-		return "Moonit"
-	case "orca":
-		return "Orca"
-	case "pancakeswap":
-		return "PancakeSwap"
-	case "uniswap":
-		return "Uniswap"
-	case "arenatrade":
-		return "ArenaTrade"
-	case "blackhole":
-		return "Blackhole"
-	case "sunswap":
-		return "SunSwap"
-	case "stonfi":
-		return "STON.fi"
-	case "traderjoe":
-		return "LFJ"
-	case "dedust":
-		return "DeDust"
-	case "sushiswap":
-		return "SushiSwap"
-	case "quickswap":
-		return "QuickSwap"
-	default:
-		return "Unknown"
-	}
-}
-
 func FormatChange(change float64) string {
 	return fmt.Sprintf("%.2f%%", change)
 }
@@ -136,31 +70,6 @@ func Link(url, text string) string {
 	return fmt.Sprintf("<a href=\"%s\">%s</a>", url, EscapeHTML(text))
 }
 
-func GetDexscreenerUrl(chainId, poolId string) string {
-	chainMap := map[string]string{
-		"ton":         "ton",
-		"bsc":         "bsc",
-		"tron":        "tron",
-		"solana":      "solana",
-		"base":        "base",
-		"ethereum":    "ethereum",
-		"polygon":     "polygon",
-		"avalanche":   "avalanche",
-		"hyperliquid": "hyperliquid",
-	}
-
-	chain, ok := chainMap[strings.ToLower(chainId)]
-	if !ok {
-		return ""
-	}
-
-	return fmt.Sprintf("https://dexscreener.com/%s/%s", chain, poolId)
-}
-
-func GetAxiomUrl(tokenId string) string {
-	return fmt.Sprintf("https://axiom.trade/t/%s/@aritect", tokenId)
-}
-
 func FormatTokenSymbol(symbol string) string {
 	if symbol == "" {
 		return ""
@@ -178,22 +87,5 @@ func FormatTimeframe(frame string) string {
 		return "24 hours"
 	default:
 		return frame
-	}
-}
-
-func FormatDexscreenerOrderType(orderType string) string {
-	switch orderType {
-	case "boost":
-		return "boost paid"
-	case "tokenProfile":
-		return "profile upgrade"
-	case "tokenAdvertising":
-		return "ad campaign paid"
-	case "communityTakeover":
-		return "community takeover"
-	case "trendingBarAdvertising":
-		return "trending placement"
-	default:
-		return orderType
 	}
 }

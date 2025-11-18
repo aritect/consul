@@ -8,7 +8,7 @@ import (
 func Chart(c *router.Context) {
 	metrics.TelegramCommandsProcessed.WithLabelValues("chart", "success").Inc()
 
-	message := "View on <a href=\"" + c.Config.ChartURL + "\">Dexscreener</a> for more details."
+	message := "View on <a href=\"" + c.Config.DexscreenerUrl + "\">Dexscreener</a> for more details."
 
 	c.SendAnswer(message)
 }
