@@ -68,33 +68,16 @@ func (s *SignalSender) SendBuySignal(buyTx *BuyTransaction) {
 }
 
 func (s *SignalSender) formatBuyMessage(buyTx *BuyTransaction) string {
-	if buyTx.SolAmount == 0 {
-		return fmt.Sprintf(
-			"<b>$ARITECT BUY 🥬🥦🌿🌵🌳☘️</b>\n\n"+
-				"<b>💰 Amount:</b> %s\n"+
-				"<b>🦊 Buyer:</b> %s\n"+
-				"<b>🔎 Transaction:</b> <a href=\"%s\">%s</a>",
-			utils.FormatNumber(buyTx.Amount, "ARITECT"),
-			s.shortenAddress(buyTx.Buyer),
-			buyTx.TxURL,
-			s.shortenAddress(buyTx.Signature),
-		)
-	}
-
-	message := fmt.Sprintf(
+	return fmt.Sprintf(
 		"<b>$ARITECT BUY 🥬🥦🌿🌵🌳☘️</b>\n\n"+
 			"<b>💰 Amount:</b> %s\n"+
-			"<b>🪙 SOL Spent:</b> %.4f SOL\n"+
 			"<b>🦊 Buyer:</b> %s\n"+
 			"<b>🔎 Transaction:</b> <a href=\"%s\">%s</a>",
 		utils.FormatNumber(buyTx.Amount, "ARITECT"),
-		buyTx.SolAmount,
 		s.shortenAddress(buyTx.Buyer),
 		buyTx.TxURL,
 		s.shortenAddress(buyTx.Signature),
 	)
-
-	return message
 }
 
 func (s *SignalSender) shortenAddress(address string) string {

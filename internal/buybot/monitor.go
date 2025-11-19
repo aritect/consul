@@ -211,6 +211,7 @@ func (m *Monitor) analyzeBuyTransaction(tx *TransactionResponse, signature strin
 	var buyer string
 	var tokenAmount float64
 	var solAmount float64
+	var foundBuyer bool
 
 	for _, postBalance := range tx.Meta.PostTokenBalances {
 		if postBalance.Mint != m.tokenAddress {
@@ -230,25 +231,36 @@ func (m *Monitor) analyzeBuyTransaction(tx *TransactionResponse, signature strin
 		if postAmount > preAmount {
 			tokenAmount = postAmount - preAmount
 			buyer = postBalance.Owner
+			foundBuyer = true
 			break
 		}
 	}
 
-	if tokenAmount == 0 || buyer == "" {
+	if !foundBuyer || tokenAmount == 0 || buyer == "" {
 		return nil
 	}
 
 	if len(tx.Meta.PreBalances) > 0 && len(tx.Meta.PostBalances) > 0 {
 		preSol := float64(tx.Meta.PreBalances[0]) / 1e9
 		postSol := float64(tx.Meta.PostBalances[0]) / 1e9
-		solAmount = preSol - postSol
-
 		fee := float64(tx.Meta.Fee) / 1e9
-		solAmount -= fee
 
-		if solAmount < 0 {
-			solAmount = 0
+		totalDecrease := preSol - postSol
+
+		solAmount = totalDecrease - fee
+		const minSolSpend = 0.01
+
+		if solAmount <= 0 {
+			m.logger.Info("skipping transaction %s: SOL balance did not decrease beyond fee (sell detected)", signature)
+			return nil
 		}
+
+		if solAmount < minSolSpend {
+			m.logger.Info("skipping transaction %s: SOL spend too low (%.6f SOL, likely arbitrage)", signature, solAmount)
+			return nil
+		}
+	} else {
+		return nil
 	}
 
 	blockTime := int64(0)
