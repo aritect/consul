@@ -25,6 +25,7 @@ type Recipient struct {
 	Type                RecipientType
 	ThreadId            int
 	AritectBuysThreadId int
+	RetransmitThreadId  int
 	Receiving           int64
 }
 
@@ -102,6 +103,8 @@ func (r *Recipient) DefineThreadIdForSignalType(signalType SignalType, threadId 
 	switch signalType {
 	case SignalTypeAritectBuys:
 		r.AritectBuysThreadId = threadId
+	case SignalTypeRetransmit:
+		r.RetransmitThreadId = threadId
 	}
 }
 
@@ -109,6 +112,8 @@ func (r *Recipient) GetThreadIdForSignalType(signalType SignalType) int {
 	switch signalType {
 	case SignalTypeAritectBuys:
 		return r.AritectBuysThreadId
+	case SignalTypeRetransmit:
+		return r.RetransmitThreadId
 	default:
 		return 0
 	}

@@ -56,6 +56,7 @@ func configureCommands(routerInstance *router.Router) {
 	routerInstance.AddCommand("/agartha", commands.Agartha)
 	routerInstance.AddCommand("/chart", commands.Chart)
 	routerInstance.AddCommand("/define_thread_id", commands.DefineThreadId)
+	routerInstance.AddCommand("/retransmit", commands.Retransmit)
 
 	routerInstance.LinkingButton("Help", "/help")
 	routerInstance.LinkingButton("Id", "/id")
