@@ -1,5 +1,9 @@
 # Consul
 
+<p align="center">
+  <img src=".github/assets/consul.svg" alt="Consul" width="100%">
+</p>
+
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b416a29aea444b6096d5c7271b712919)](https://app.codacy.com/gh/aritect/consul/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/aritect/consul)
