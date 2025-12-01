@@ -21,12 +21,19 @@ const (
 )
 
 type Recipient struct {
-	Id                  int64
-	Type                RecipientType
-	ThreadId            int
-	AritectBuysThreadId int
-	RetransmitThreadId  int
-	Receiving           int64
+	Id                 int64
+	Type               RecipientType
+	ThreadId           int
+	BuysThreadId       int
+	RetransmitThreadId int
+	Receiving          int64
+	ProjectName        string
+	TokenTicker        string
+	Description        string
+	WebsiteURL         string
+	TokenAddress       string
+	DexURL             string
+	AxiomURL           string
 }
 
 func NewRecipient(id int64, recipientType RecipientType, threadId int) (*Recipient, error) {
@@ -101,8 +108,8 @@ func (r *Recipient) DefineThreadId(threadId int) {
 
 func (r *Recipient) DefineThreadIdForSignalType(signalType SignalType, threadId int) {
 	switch signalType {
-	case SignalTypeAritectBuys:
-		r.AritectBuysThreadId = threadId
+	case SignalTypeBuys:
+		r.BuysThreadId = threadId
 	case SignalTypeRetransmit:
 		r.RetransmitThreadId = threadId
 	}
@@ -110,8 +117,8 @@ func (r *Recipient) DefineThreadIdForSignalType(signalType SignalType, threadId 
 
 func (r *Recipient) GetThreadIdForSignalType(signalType SignalType) int {
 	switch signalType {
-	case SignalTypeAritectBuys:
-		return r.AritectBuysThreadId
+	case SignalTypeBuys:
+		return r.BuysThreadId
 	case SignalTypeRetransmit:
 		return r.RetransmitThreadId
 	default:
@@ -189,4 +196,11 @@ func IterateRecipients(fn func(*Recipient)) {
 
 func GetRecipientKey(id int64) []byte {
 	return []byte(fmt.Sprintf("recipient:%d", id))
+}
+
+func GetWithFallback(recipientValue, fallback string) string {
+	if recipientValue != "" {
+		return recipientValue
+	}
+	return fallback
 }

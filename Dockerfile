@@ -18,13 +18,13 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /workspace
 
-RUN addgroup -g 1000 aritect && \
-    adduser -D -u 1000 -G aritect aritect
+RUN addgroup -g 1000 consul && \
+    adduser -D -u 1000 -G consul consul
 
 RUN mkdir -p /workspace/data && \
-    chown -R aritect:aritect /workspace/data
+    chown -R consul:consul /workspace/data
 
-USER aritect
+USER consul
 
 COPY --from=builder /workspace/target/consul-telegram-bot ./consul-telegram-bot
 COPY --from=builder /workspace/assets ./assets

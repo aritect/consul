@@ -37,5 +37,5 @@ func retransmitHandler(c *router.Context) {
 	}
 
 	metrics.TelegramCommandsProcessed.WithLabelValues("retransmit", "success").Inc()
-	c.SendAnswer(fmt.Sprintf("✅ Message retransmitd to %d recipients.", sentCount))
+	c.SendAnswer(fmt.Sprintf("✅ Message retransmitted to %d recipients.", sentCount))
 }

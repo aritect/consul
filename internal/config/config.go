@@ -9,27 +9,36 @@ type Config struct {
 	ManagerId        int64
 	TelegramBotToken string
 	StorePath        string
-	WebsiteURL       string
-	TokenAddress     string
-	ArbiterBotURL    string
-	AgarthaBotURL    string
-	DexscreenerUrl   string
-	AxiomUrl         string
 	HeliusRpcURL     string
+
+	ProjectName  string
+	TokenTicker  string
+	Description  string
+	WebsiteURL   string
+	TokenAddress string
+	DexURL       string
+	AxiomURL     string
 }
 
 func New() *Config {
+	storePath := getEnvString("LEVELDB_STORE_PATH")
+	if storePath == "" {
+		storePath = "./data/store"
+	}
+
 	return &Config{
 		TelegramBotToken: getEnvString("TELEGRAM_BOT_TOKEN"),
 		ManagerId:        getEnvInt64("MANAGER_ID"),
-		StorePath:        getEnvString("LEVELDB_STORE_PATH"),
-		WebsiteURL:       getEnvString("WEBSITE_URL"),
-		TokenAddress:     getEnvString("TOKEN_ADDRESS"),
-		ArbiterBotURL:    getEnvString("ARBITER_BOT_URL"),
-		AgarthaBotURL:    getEnvString("AGARTHA_BOT_URL"),
-		DexscreenerUrl:   getEnvString("DEXSCREENER_URL"),
-		AxiomUrl:         getEnvString("AXIOM_URL"),
+		StorePath:        storePath,
 		HeliusRpcURL:     getEnvString("HELIUS_RPC_URL"),
+
+		ProjectName:  getEnvString("PROJECT_NAME"),
+		TokenTicker:  getEnvString("TOKEN_TICKER"),
+		Description:  getEnvString("DESCRIPTION"),
+		WebsiteURL:   getEnvString("WEBSITE_URL"),
+		TokenAddress: getEnvString("TOKEN_ADDRESS"),
+		DexURL:       getEnvString("DEX_URL"),
+		AxiomURL:     getEnvString("AXIOM_URL"),
 	}
 }
 

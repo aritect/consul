@@ -52,11 +52,11 @@ func configureCommands(routerInstance *router.Router) {
 	routerInstance.AddCommand("/help", commands.Help)
 	routerInstance.AddCommand("/website", commands.Website)
 	routerInstance.AddCommand("/ca", commands.CA)
-	routerInstance.AddCommand("/arbiter", commands.Arbiter)
-	routerInstance.AddCommand("/agartha", commands.Agartha)
 	routerInstance.AddCommand("/chart", commands.Chart)
 	routerInstance.AddCommand("/define_thread_id", commands.DefineThreadId)
 	routerInstance.AddCommand("/retransmit", commands.Retransmit)
+	routerInstance.AddCommand("/setup", commands.Setup)
+	routerInstance.AddCommand("/set", commands.Set)
 
 	routerInstance.LinkingButton("Help", "/help")
 	routerInstance.LinkingButton("Id", "/id")
@@ -95,17 +95,17 @@ func main() {
 	go startUpdatesListener(botInstance, routerInstance, loggerInstance)
 
 	if configInstance.HeliusRpcURL != "" && configInstance.TokenAddress != "" {
-		loggerInstance.Info("starting Aritect buy bot...")
+		loggerInstance.Info("starting Consul buy bot...")
 		heliusClient := buybot.NewHeliusClient(configInstance.HeliusRpcURL)
 		monitor := buybot.NewMonitor(heliusClient, loggerInstance, configInstance.TokenAddress)
-		signalSender := buybot.NewSignalSender(botInstance, loggerInstance, configInstance.DexscreenerUrl, configInstance.AxiomUrl)
+		signalSender := buybot.NewSignalSender(botInstance, loggerInstance, configInstance)
 
 		monitor.SetBuyHandler(func(buyTx *buybot.BuyTransaction) {
 			signalSender.SendBuySignal(buyTx)
 		})
 
 		go monitor.Start()
-		loggerInstance.Info("Aritect buy bot started successfully")
+		loggerInstance.Info("Consul buy bot started successfully")
 	} else {
 		loggerInstance.Info("Helius RPC URL or Token Address not configured, buy bot disabled")
 	}

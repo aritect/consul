@@ -16,7 +16,7 @@ func DefineThreadId(c *router.Context) {
 
 	if len(c.Args) == 0 {
 		metrics.TelegramCommandsProcessed.WithLabelValues("define_thread_id", "error").Inc()
-		c.SendAnswer("🚧 Please specify signal type: aritect_buys, retransmit.")
+		c.SendAnswer("🚧 Please specify signal type: buys, retransmit.")
 		return
 	}
 
@@ -24,7 +24,7 @@ func DefineThreadId(c *router.Context) {
 	signalType, ok := model.ParseSignalType(signalTypeStr)
 	if !ok {
 		metrics.TelegramCommandsProcessed.WithLabelValues("define_thread_id", "error").Inc()
-		c.SendAnswer("🚧 Invalid signal type. Available types: aritect_buys, retransmit.")
+		c.SendAnswer("🚧 Invalid signal type. Available types: buys, retransmit.")
 		return
 	}
 

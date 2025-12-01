@@ -48,7 +48,7 @@ func (m *Monitor) SetBuyHandler(handler func(*BuyTransaction)) {
 }
 
 func (m *Monitor) Start() {
-	m.logger.Info("starting Aritect buy monitor for token: %s", m.tokenAddress)
+	m.logger.Info("starting Consul buy monitor for token: %s", m.tokenAddress)
 
 	signatures, err := m.client.GetSignaturesForAddress(m.tokenAddress, 1)
 	if err != nil {
@@ -132,7 +132,7 @@ func (m *Monitor) checkNewTransactions() {
 			largestBuy := m.findLargestBuy(buyTransactions)
 			if largestBuy != nil && m.onBuyTransaction != nil {
 				if m.shouldSendBuy(largestBuy) {
-					m.logger.Info("sending largest buy from %d transactions: %.2f ARITECT", len(buyTransactions), largestBuy.Amount)
+					m.logger.Info("sending largest buy from %d transactions: %.2f tokens", len(buyTransactions), largestBuy.Amount)
 					m.onBuyTransaction(largestBuy)
 
 					m.throttleMu.Lock()
@@ -140,7 +140,7 @@ func (m *Monitor) checkNewTransactions() {
 					m.lastSentAmount = largestBuy.Amount
 					m.throttleMu.Unlock()
 				} else {
-					m.logger.Info("skipping buy notification (throttled): %.2f ARITECT", largestBuy.Amount)
+					m.logger.Info("skipping buy notification (throttled): %.2f tokens", largestBuy.Amount)
 				}
 			}
 		}

@@ -2,6 +2,7 @@ package buybot
 
 import (
 	"consul-telegram-bot/internal/bot"
+	"consul-telegram-bot/internal/config"
 	"consul-telegram-bot/internal/logger"
 	"consul-telegram-bot/internal/model"
 	"consul-telegram-bot/internal/utils"
@@ -15,15 +16,14 @@ import (
 )
 
 type SignalSender struct {
-	bot            *bot.Bot
-	logger         *logger.Logger
-	gifPaths       []string
-	rng            *rand.Rand
-	dexscreenerUrl string
-	axiomUrl       string
+	bot      *bot.Bot
+	logger   *logger.Logger
+	config   *config.Config
+	gifPaths []string
+	rng      *rand.Rand
 }
 
-func NewSignalSender(botInstance *bot.Bot, logger *logger.Logger, dexscreenerUrl string, axiomUrl string) *SignalSender {
+func NewSignalSender(botInstance *bot.Bot, logger *logger.Logger, cfg *config.Config) *SignalSender {
 	gifPaths := []string{
 		"./assets/1.gif",
 		"./assets/2.gif",
@@ -34,12 +34,11 @@ func NewSignalSender(botInstance *bot.Bot, logger *logger.Logger, dexscreenerUrl
 	}
 
 	return &SignalSender{
-		bot:            botInstance,
-		logger:         logger,
-		gifPaths:       gifPaths,
-		rng:            rand.New(rand.NewSource(time.Now().UnixNano())),
-		dexscreenerUrl: dexscreenerUrl,
-		axiomUrl:       axiomUrl,
+		bot:      botInstance,
+		logger:   logger,
+		config:   cfg,
+		gifPaths: gifPaths,
+		rng:      rand.New(rand.NewSource(time.Now().UnixNano())),
 	}
 }
 
@@ -52,28 +51,38 @@ func (s *SignalSender) SendBuySignal(buyTx *BuyTransaction) {
 		return
 	}
 
-	message := s.formatBuyMessage(buyTx)
 	gifPath := s.getRandomGif()
 
 	for _, recipient := range recipients {
-		threadId := recipient.GetThreadIdForSignalType(model.SignalTypeAritectBuys)
+		threadId := recipient.GetThreadIdForSignalType(model.SignalTypeBuys)
 
 		if threadId == 0 {
 			continue
 		}
 
+		ticker := model.GetWithFallback(recipient.TokenTicker, s.config.TokenTicker)
+		dexURL := model.GetWithFallback(recipient.DexURL, s.config.DexURL)
+		axiomURL := model.GetWithFallback(recipient.AxiomURL, s.config.AxiomURL)
+
+		message := s.formatBuyMessage(buyTx, ticker)
+
 		s.logger.Info("sending buy signal to chat %d, thread %d", recipient.Id, threadId)
-		s.sendAnimationWithCaption(recipient, gifPath, message, threadId)
+		s.sendAnimationWithCaption(recipient, gifPath, message, threadId, dexURL, axiomURL)
 	}
 }
 
-func (s *SignalSender) formatBuyMessage(buyTx *BuyTransaction) string {
+func (s *SignalSender) formatBuyMessage(buyTx *BuyTransaction, ticker string) string {
+	if ticker == "" {
+		ticker = "TOKEN"
+	}
+
 	return fmt.Sprintf(
-		"<b>$ARITECT BUY 🥬🥦🌿🌵🌳☘️</b>\n\n"+
+		"<b>$%s BUY 🥬🥦🌿🌵🌳☘️</b>\n\n"+
 			"<b>💰 Amount:</b> %s\n"+
 			"<b>🦊 Buyer:</b> %s\n"+
 			"<b>🔎 Transaction:</b> <a href=\"%s\">%s</a>",
-		utils.FormatNumber(buyTx.Amount, "ARITECT"),
+		ticker,
+		utils.FormatNumber(buyTx.Amount, ticker),
 		s.shortenAddress(buyTx.Buyer),
 		buyTx.TxURL,
 		s.shortenAddress(buyTx.Signature),
@@ -110,7 +119,7 @@ func (s *SignalSender) getRandomGif() string {
 	return absPath
 }
 
-func (s *SignalSender) sendAnimationWithCaption(recipient *model.Recipient, gifPath string, caption string, threadId int) {
+func (s *SignalSender) sendAnimationWithCaption(recipient *model.Recipient, gifPath string, caption string, threadId int, dexURL string, axiomURL string) {
 	animation := &telebot.Animation{
 		File:     telebot.FromDisk(gifPath),
 		MIME:     "image/gif",
@@ -119,12 +128,18 @@ func (s *SignalSender) sendAnimationWithCaption(recipient *model.Recipient, gifP
 	}
 
 	inlineKeyboard := &telebot.ReplyMarkup{}
-	dexScreenerBuyButton := inlineKeyboard.URL("Buy on Dexscreener", s.dexscreenerUrl)
-	axiomBuyButton := inlineKeyboard.URL("Buy on Axiom", s.axiomUrl)
 
-	inlineKeyboard.Inline(
-		inlineKeyboard.Row(dexScreenerBuyButton, axiomBuyButton),
-	)
+	var buttons []telebot.Btn
+	if dexURL != "" {
+		buttons = append(buttons, inlineKeyboard.URL("Buy on Dexscreener", dexURL))
+	}
+	if axiomURL != "" {
+		buttons = append(buttons, inlineKeyboard.URL("Buy on Axiom", axiomURL))
+	}
+
+	if len(buttons) > 0 {
+		inlineKeyboard.Inline(inlineKeyboard.Row(buttons...))
+	}
 
 	opts := &telebot.SendOptions{
 		ParseMode:   "HTML",
