@@ -1,5 +1,8 @@
 # Consul
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/b416a29aea444b6096d5c7271b712919)](https://app.codacy.com/gh/aritect/consul/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
 Your AI-powered community assistant for Telegram.
 
 Consul is an intelligent Telegram bot developed by Aritect, designed to streamline community management and deliver real-time ecosystem updates. Acting as your digital concierge, Consul bridges the gap between on-chain activity and community engagement — keeping your members informed without the noise.
