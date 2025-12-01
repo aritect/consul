@@ -2,11 +2,15 @@
 
 Your AI-powered community assistant for Telegram.
 
-Consul is an intelligent Telegram bot developed by Aritect, designed to streamline community management and deliver real-time ecosystem updates. Acting as your digital concierge, Consul bridges the gap between on-chain activity and community engagement—keeping your members informed without the noise.
+Consul is an intelligent Telegram bot developed by Aritect, designed to streamline community management and deliver real-time ecosystem updates. Acting as your digital concierge, Consul bridges the gap between on-chain activity and community engagement — keeping your members informed without the noise.
 
 Think of it as your community's AI co-pilot—automating routine tasks, broadcasting critical updates, and providing instant access to ecosystem resources.
 
 **Open Source & Self-Hostable** — Consul is fully open source under the MIT license. Deploy it in your own Telegram community, customize it to your needs, and make it truly yours.
+
+**Need Help?** — Join our [official community](https://t.me/+-gbpQ8ooxu5hYTYy) for setup assistance and onboarding support.
+
+**Contributions Welcome** — We're open to issues and pull requests. Found a bug or have a feature idea? Let us know on [GitHub](https://github.com/aritect/consul).
 
 ## Naming
 
@@ -18,13 +22,21 @@ The name "Consul" draws from the Roman Republic's highest elected officials—tr
 
 - **Ad-Free Experience** — Clean, distraction-free interactions without promotional interruptions.
 - **Buy Bot Implementation** — Real-time monitoring and notifications for token purchases on Solana, with intelligent throttling to prevent notification spam.
+- **Customizable Buy Alerts** — Personalize your buy notifications with custom GIFs to match your community's style.
 - **Cross-Platform Retransmission** — Seamlessly broadcast updates from X directly to designated Telegram threads using the `/retransmit` command.
 - **Ecosystem Navigation** — Instant access to charts, contract addresses, and platform resources.
 
-### Coming Soon
+### Upcoming Features
 
 - **Context-Aware Summaries** — AI-generated summaries of the last 100 community messages, helping members stay informed without scrolling through endless conversations.
 - **Enhanced LLM Integrations** — Advanced natural language processing for smarter community interactions.
+- **Community Leaderboards** — Gamified ranking system tracking member engagement and contributions.
+- **Customizable Buy Alerts** — Personalize your buy notifications with custom GIFs to match your community's style.
+- **Achievement System** — Unlockable badges and rewards for community milestones, early adopters, and active participants.
+- **Referral Tracking** — Built-in referral system with attribution and reward distribution.
+- **Airdrop Distribution** — Automated airdrop campaigns based on community ranking and engagement scores.
+
+We're constantly building new features. Stay tuned for announcements.
 
 ## Architecture
 
@@ -102,15 +114,15 @@ The name "Consul" draws from the Roman Republic's highest elected officials—tr
 
 | Command | Description |
 |---------|-------------|
-| `/start` | Initialize bot interaction |
-| `/help` | Display available commands |
-| `/id` | Get current chat ID |
-| `/website` | Get website link |
-| `/ca` | Get token contract address |
-| `/chart` | View chart on Dexscreener |
-| `/retransmit` | Broadcast message to all recipients (admin only) |
-| `/setup` | Interactive setup wizard (admin only) |
-| `/set` | Configure settings (admin only) |
+| `/start` | Initialize bot interaction. |
+| `/help` | Display available commands. |
+| `/id` | Get current chat ID. |
+| `/website` | Get website link. |
+| `/ca` | Get token contract address. |
+| `/chart` | View chart on Dexscreener. |
+| `/retransmit` | Broadcast message to all recipients (admin only). |
+| `/setup` | Interactive setup wizard (admin only). |
+| `/set` | Configure settings (admin only). |
 
 ### Per-Community Configuration
 

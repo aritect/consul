@@ -10,6 +10,7 @@ import (
 	"consul-telegram-bot/internal/router"
 	"consul-telegram-bot/internal/store"
 
+	"github.com/joho/godotenv"
 	telebot "gopkg.in/telebot.v3"
 )
 
@@ -63,6 +64,8 @@ func configureCommands(routerInstance *router.Router) {
 }
 
 func main() {
+	_ = godotenv.Load()
+
 	loggerInstance := logger.New()
 
 	go func() {
