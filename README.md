@@ -16,6 +16,8 @@ Consul is an intelligent Telegram bot developed by Aritect, designed to streamli
 
 Think of it as your community's AI co-pilot—automating routine tasks, broadcasting critical updates, and providing instant access to ecosystem resources.
 
+**See It in Action** — Check out the live demo in [Aritect Community](https://t.me/+-gbpQ8ooxu5hYTYy).
+
 **Open Source & Self-Hostable** — Consul is fully open source under the MIT license. Deploy it in your own Telegram community, customize it to your needs, and make it truly yours.
 
 **Need Help?** — Join our [official community](https://t.me/+-gbpQ8ooxu5hYTYy) for setup assistance and onboarding support.
