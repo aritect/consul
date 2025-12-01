@@ -2,6 +2,9 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/b416a29aea444b6096d5c7271b712919)](https://app.codacy.com/gh/aritect/consul/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/aritect/consul)
+![Solana](https://img.shields.io/badge/solana-%239945FF.svg?logo=solana&logoColor=white)
+![X (formerly Twitter) Follow](https://img.shields.io/twitter/follow/aritectlabs)
 
 Your AI-powered community assistant for Telegram.
 
