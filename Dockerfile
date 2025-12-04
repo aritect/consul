@@ -11,6 +11,8 @@ WORKDIR /workspace
 RUN go mod download
 
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o target/consul-telegram-bot ./cmd/consul-telegram-bot
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o target/db-migrate ./cmd/db-migrate
+RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o target/db-dump ./cmd/db-dump
 
 FROM alpine:latest AS production
 
@@ -27,6 +29,8 @@ RUN mkdir -p /workspace/data && \
 USER consul
 
 COPY --from=builder /workspace/target/consul-telegram-bot ./consul-telegram-bot
+COPY --from=builder /workspace/target/db-migrate ./db-migrate
+COPY --from=builder /workspace/target/db-dump ./db-dump
 COPY --from=builder /workspace/assets ./assets
 
 EXPOSE 8080

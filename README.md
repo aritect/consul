@@ -34,13 +34,12 @@ The name "Consul" draws from the Roman Republic's highest elected officials—tr
 
 - **Ad-Free Experience** — Clean, distraction-free interactions without promotional interruptions.
 - **Buy Bot Implementation** — Real-time monitoring and notifications for token purchases on Solana, with intelligent throttling to prevent notification spam.
-- **Customizable Buy Alerts** — Personalize your buy notifications with custom GIFs to match your community's style.
 - **Cross-Platform Retransmission** — Seamlessly broadcast updates from X directly to designated Telegram threads using the `/retransmit` command.
 - **Ecosystem Navigation** — Instant access to charts, contract addresses, and platform resources.
+- **Context-Aware Summaries** — AI-generated summaries of the last 100 community messages using LLM (Groq/OpenAI), helping members stay informed without scrolling through endless conversations.
 
 ### Upcoming Features
 
-- **Context-Aware Summaries** — AI-generated summaries of the last 100 community messages, helping members stay informed without scrolling through endless conversations.
 - **Enhanced LLM Integrations** — Advanced natural language processing for smarter community interactions.
 - **Community Leaderboards** — Gamified ranking system tracking member engagement and contributions.
 - **Customizable Buy Alerts** — Personalize your buy notifications with custom GIFs to match your community's style.
@@ -109,7 +108,7 @@ We're constantly building new features. Stay tuned for announcements.
 | **Commands** | Business logic for each bot command. |
 | **Context** | Request context with helpers (SendAnswer, logging). |
 | **Config** | Environment-based configuration. |
-| **Store** | LevelDB for persistent data (recipients). |
+| **Store** | LevelDB for persistent data (recipients, messages). |
 | **Metrics** | Prometheus metrics endpoint. |
 | **Logger** | Structured logging. |
 
@@ -135,6 +134,7 @@ We're constantly building new features. Stay tuned for announcements.
 | `/retransmit` | Broadcast message to all recipients (admin only). |
 | `/setup` | Interactive setup wizard (admin only). |
 | `/set` | Configure settings (admin only). |
+| `/summary` | Generate AI summary of recent chat messages. |
 
 ### Per-Community Configuration
 
@@ -160,6 +160,7 @@ All settings are stored per-chat, allowing each community to have its own config
 - Docker (optional, for containerized deployment).
 - Telegram Bot Token (obtain from [@BotFather](https://t.me/BotFather)).
 - Helius API key (for Solana RPC, optional for buy bot functionality).
+- LLM API key (Groq or OpenAI, optional for `/summary` command).
 
 ### Configuration
 
@@ -173,6 +174,11 @@ MANAGER_ID=your_telegram_chat_id
 # Buy bot (optional)
 TOKEN_ADDRESS=your_token_contract_address
 HELIUS_RPC_URL=https://mainnet.helius-rpc.com/?api-key=your_api_key
+
+# LLM for summaries (optional)
+LLM_PROVIDER=groq
+LLM_API_KEY=your_groq_or_openai_api_key
+LLM_MODEL=meta-llama/llama-4-scout-17b-16e-instruct
 
 # Default values (optional, can be overridden via /set per community)
 PROJECT_NAME=Aritect

@@ -20,6 +20,7 @@ environment
 .ropeproject
 
 # environment variables
+.env
 .nexusrc
 .env.production
 .env.development

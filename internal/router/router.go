@@ -5,6 +5,7 @@ import (
 	"consul-telegram-bot/internal/config"
 	"consul-telegram-bot/internal/logger"
 	"consul-telegram-bot/internal/metrics"
+	"consul-telegram-bot/internal/model"
 	"runtime"
 	"strings"
 	"sync"
@@ -57,6 +58,10 @@ func (r *Router) HandleTextMessage(m *telebot.Message) {
 	r.logger.Info("received message from %d", m.Chat.ID)
 
 	chatType := m.Chat.Type
+
+	if !strings.HasPrefix(m.Text, "/") && (chatType == telebot.ChatGroup || chatType == telebot.ChatSuperGroup) {
+		r.storeMessage(m)
+	}
 
 	command := "unknown"
 	if strings.HasPrefix(m.Text, "/") {
@@ -147,5 +152,54 @@ func (r *Router) Safely(fn func()) {
 		}()
 
 		fn()
+	}()
+}
+
+func (r *Router) storeMessage(m *telebot.Message) {
+	senderName := ""
+	senderUsername := ""
+	if m.Sender != nil {
+		if m.Sender.FirstName != "" {
+			senderName = m.Sender.FirstName
+		}
+		if m.Sender.LastName != "" {
+			if senderName != "" {
+				senderName += " "
+			}
+			senderName += m.Sender.LastName
+		}
+		if senderName == "" && m.Sender.Username != "" {
+			senderName = m.Sender.Username
+		}
+		senderUsername = m.Sender.Username
+	}
+
+	senderID := int64(0)
+	if m.Sender != nil {
+		senderID = m.Sender.ID
+	}
+
+	_, err := model.NewMessage(
+		m.Chat.ID,
+		m.ID,
+		senderID,
+		senderName,
+		senderUsername,
+		m.Text,
+		int64(m.Unixtime),
+	)
+
+	if err != nil {
+		r.logger.Error("failed to store message: %s", err)
+		return
+	}
+
+	go func() {
+		deleted, err := model.DeleteExcessMessages(m.Chat.ID, 200)
+		if err != nil {
+			r.logger.Error("failed to cleanup old messages: %s", err)
+		} else if deleted > 0 {
+			r.logger.Info("cleaned up %d old messages from chat %d", deleted, m.Chat.ID)
+		}
 	}()
 }

@@ -2,11 +2,16 @@ package commands
 
 import (
 	"consul-telegram-bot/internal/metrics"
+	"consul-telegram-bot/internal/middlewares"
 	"consul-telegram-bot/internal/model"
 	"consul-telegram-bot/internal/router"
 )
 
 func DefineThreadId(c *router.Context) {
+	middlewares.Manager(defineThreadIdHandler, c.Config.ManagerId)(c)
+}
+
+func defineThreadIdHandler(c *router.Context) {
 	recipient, err := model.FindRecipient(c.Message.Chat.ID)
 	if err != nil {
 		metrics.TelegramCommandsProcessed.WithLabelValues("define_thread_id", "error").Inc()

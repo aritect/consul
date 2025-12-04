@@ -18,6 +18,10 @@ type Config struct {
 	TokenAddress string
 	DexURL       string
 	AxiomURL     string
+
+	LLMProvider string
+	LLMAPIKey   string
+	LLMModel    string
 }
 
 func New() *Config {
@@ -39,6 +43,10 @@ func New() *Config {
 		TokenAddress: getEnvString("TOKEN_ADDRESS"),
 		DexURL:       getEnvString("DEX_URL"),
 		AxiomURL:     getEnvString("AXIOM_URL"),
+
+		LLMProvider: getEnvString("LLM_PROVIDER"),
+		LLMAPIKey:   getEnvString("LLM_API_KEY"),
+		LLMModel:    getEnvString("LLM_MODEL"),
 	}
 }
 
