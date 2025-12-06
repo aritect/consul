@@ -37,11 +37,11 @@ The name "Consul" draws from the Roman Republic's highest elected officials—tr
 - **Cross-Platform Retransmission** — Seamlessly broadcast updates from X directly to designated Telegram threads using the `/retransmit` command.
 - **Ecosystem Navigation** — Instant access to charts, contract addresses, and platform resources.
 - **Context-Aware Summaries** — AI-generated summaries of the last 100 community messages using LLM (Groq/OpenAI), helping members stay informed without scrolling through endless conversations.
+- **Community Leaderboards** — Gamified ranking system tracking member engagement and contributions. Reply to any message with `/up` to give points, and use `/leaderboard` to see top contributors.
 
 ### Upcoming Features
 
 - **Enhanced LLM Integrations** — Advanced natural language processing for smarter community interactions.
-- **Community Leaderboards** — Gamified ranking system tracking member engagement and contributions.
 - **Customizable Buy Alerts** — Personalize your buy notifications with custom GIFs to match your community's style.
 - **Achievement System** — Unlockable badges and rewards for community milestones, early adopters, and active participants.
 - **Referral Tracking** — Built-in referral system with attribution and reward distribution.
@@ -135,6 +135,8 @@ We're constantly building new features. Stay tuned for announcements.
 | `/setup` | Interactive setup wizard (admin only). |
 | `/set` | Configure settings (admin only). |
 | `/summary` | Generate AI summary of recent chat messages. |
+| `/up` | Give a point to a message author (reply to message). |
+| `/leaderboard` | View top community contributors. |
 
 ### Per-Community Configuration
 
