@@ -60,6 +60,8 @@ func configureCommands(routerInstance *router.Router) {
 	routerInstance.AddCommand("/set", commands.Set)
 	routerInstance.AddCommand("/clear", commands.Clear)
 	routerInstance.AddCommand("/summary", commands.Summary)
+	routerInstance.AddCommand("/up", commands.Up)
+	routerInstance.AddCommand("/leaderboard", commands.Leaderboard)
 
 	routerInstance.LinkingButton("Help", "/help")
 	routerInstance.LinkingButton("Id", "/id")

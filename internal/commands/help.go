@@ -16,6 +16,9 @@ func Help(c *router.Context) {
 		"/website - Get website link.\n" +
 		"/ca - Get contract address.\n" +
 		"/chart - View chart on Dexscreener.\n\n" +
+		"<b>Community:</b>\n" +
+		"/up - Give a point (reply to a message).\n" +
+		"/leaderboard - View top contributors.\n\n" +
 		"<b>AI:</b>\n" +
 		"/summary - Get AI summary of recent messages."
 
