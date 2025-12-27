@@ -63,11 +63,20 @@ func (r *Router) HandleTextMessage(m *telebot.Message) {
 		r.storeMessage(m)
 	}
 
+	text := m.Text
+	if text == "" && m.Caption != "" {
+		text = m.Caption
+	}
+
 	command := "unknown"
-	if strings.HasPrefix(m.Text, "/") {
-		command = strings.Split(m.Text, " ")[0]
+	if strings.HasPrefix(text, "/") {
+		command = strings.Split(text, " ")[0]
 		r.logger.Info("received message with command %s", command)
 		r.handleCommand(*m)
+	} else if m.ReplyTo != nil && m.ReplyTo.Sender != nil && m.ReplyTo.Sender.IsBot {
+		command = "/consul"
+		r.logger.Info("received reply to bot message, triggering consul")
+		r.handleReplyToBot(*m)
 	} else {
 		command = "button"
 		r.handleCommandButton(*m)
@@ -113,12 +122,29 @@ func (r *Router) handleCommand(m telebot.Message) {
 	}
 }
 
+func (r *Router) handleReplyToBot(m telebot.Message) {
+	msg := r.parseMessage(&m)
+	msg.Command = "/consul"
+	execFn := r.commands["/consul"]
+
+	if execFn != nil {
+		r.Safely(func() {
+			execFn(msg)
+		})
+	}
+}
+
 func (r *Router) parseMessage(m *telebot.Message) *Context {
 	command := ""
 	var args []string
 
-	if m.Text != "" {
-		msgTokens := strings.Fields(m.Text)
+	text := m.Text
+	if text == "" && m.Caption != "" {
+		text = m.Caption
+	}
+
+	if text != "" {
+		msgTokens := strings.Fields(text)
 		command, args = strings.ToLower(msgTokens[0]), msgTokens[1:]
 		if strings.Contains(command, "@") {
 			splittedCommand := strings.Split(command, "@")

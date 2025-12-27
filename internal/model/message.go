@@ -175,3 +175,51 @@ func CountMessages(chatID int64) int {
 func GetMessageKey(chatID int64, timestamp int64, messageID int) []byte {
 	return []byte(fmt.Sprintf("message:%d:%d:%d", chatID, timestamp, messageID))
 }
+
+func GetMessagesAroundTarget(chatID int64, targetMessageID int, beforeCount, afterCount int) ([]*Message, error) {
+	allMessages, err := GetLastMessages(chatID, 1000)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, j := 0, len(allMessages)-1; i < j; i, j = i+1, j-1 {
+		allMessages[i], allMessages[j] = allMessages[j], allMessages[i]
+	}
+
+	targetIndex := -1
+	for i, msg := range allMessages {
+		if msg.MessageID == targetMessageID {
+			targetIndex = i
+			break
+		}
+	}
+
+	if targetIndex == -1 {
+		return nil, fmt.Errorf("target message not found")
+	}
+
+	startIndex := targetIndex - beforeCount
+	if startIndex < 0 {
+		startIndex = 0
+	}
+
+	endIndex := targetIndex + afterCount + 1
+	if endIndex > len(allMessages) {
+		endIndex = len(allMessages)
+	}
+
+	return allMessages[startIndex:endIndex], nil
+}
+
+func GetRecentMessagesForContext(chatID int64, limit int) ([]*Message, error) {
+	messages, err := GetLastMessages(chatID, limit)
+	if err != nil {
+		return nil, err
+	}
+
+	for i, j := 0, len(messages)-1; i < j; i, j = i+1, j-1 {
+		messages[i], messages[j] = messages[j], messages[i]
+	}
+
+	return messages, nil
+}

@@ -34,6 +34,11 @@ func startUpdatesListener(botInstance *bot.Bot, routerInstance *router.Router, l
 		return nil
 	})
 
+	botInstance.Bot.Handle(telebot.OnDocument, func(c telebot.Context) error {
+		routerInstance.HandleTextMessage(c.Message())
+		return nil
+	})
+
 	botInstance.Bot.Handle(telebot.OnUserJoined, deleteServiceMessage(botInstance, loggerInstance, "user_joined"))
 	botInstance.Bot.Handle(telebot.OnUserLeft, deleteServiceMessage(botInstance, loggerInstance, "user_left"))
 	botInstance.Bot.Handle(telebot.OnAddedToGroup, deleteServiceMessage(botInstance, loggerInstance, "added_to_group"))
@@ -60,6 +65,8 @@ func configureCommands(routerInstance *router.Router) {
 	routerInstance.AddCommand("/set", commands.Set)
 	routerInstance.AddCommand("/clear", commands.Clear)
 	routerInstance.AddCommand("/summary", commands.Summary)
+	routerInstance.AddCommand("/consul", commands.Consul)
+	routerInstance.AddCommand("/set_llm_context", commands.SetLLMContext)
 	routerInstance.AddCommand("/up", commands.Up)
 	routerInstance.AddCommand("/leaderboard", commands.Leaderboard)
 

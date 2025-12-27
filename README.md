@@ -37,11 +37,10 @@ The name "Consul" draws from the Roman Republic's highest elected officials—tr
 - **Cross-Platform Retransmission** — Seamlessly broadcast updates from X directly to designated Telegram threads using the `/retransmit` command.
 - **Ecosystem Navigation** — Instant access to charts, contract addresses, and platform resources.
 - **Context-Aware Summaries** — AI-generated summaries of the last 100 community messages using LLM (Groq/OpenAI), helping members stay informed without scrolling through endless conversations.
+- **Enhanced LLM Integrations** — AI-powered `/consul` command for intelligent Q&A with customizable context. Supports direct questions and reply-based interactions for natural conversations.
 - **Community Leaderboards** — Gamified ranking system tracking member engagement and contributions. Reply to any message with `/up` to give points, and use `/leaderboard` to see top contributors.
 
 ### Upcoming Features
-
-- **Enhanced LLM Integrations** — Advanced natural language processing for smarter community interactions.
 - **Customizable Buy Alerts** — Personalize your buy notifications with custom GIFs to match your community's style.
 - **Achievement System** — Unlockable badges and rewards for community milestones, early adopters, and active participants.
 - **Referral Tracking** — Built-in referral system with attribution and reward distribution.
@@ -135,6 +134,8 @@ We're constantly building new features. Stay tuned for announcements.
 | `/setup` | Interactive setup wizard (admin only). |
 | `/set` | Configure settings (admin only). |
 | `/summary` | Generate AI summary of recent chat messages. |
+| `/consul` | Ask AI questions about your project. Supports direct questions and reply-based interactions. |
+| `/set_llm_context` | Set custom context for AI responses (admin only). |
 | `/up` | Give a point to a message author (reply to message). |
 | `/leaderboard` | View top community contributors. |
 
@@ -154,6 +155,48 @@ Run `/setup` to see the configuration wizard, then use `/set` to configure:
 
 All settings are stored per-chat, allowing each community to have its own configuration.
 
+### AI Assistant Usage
+
+#### Setting Custom Context (Admin Only)
+
+Configure AI responses with project-specific knowledge. You can provide context in two ways:
+
+**Option 1: Direct text input**
+```
+/set_llm_context You are an expert in Aritect platform. Aritect is building trust infrastructure for Web3. We provide risk scoring, wallet analytics, and behavioral analysis for businesses — helping lenders, exchanges, payment processors, and token issuers make informed decisions about on-chain counterparties.
+```
+
+**Option 2: Upload a .txt file**
+1. Attach a `.txt` file to your message
+2. Add the command `/set_llm_context` as caption or in the message
+3. The bot will read the file content and set it as context
+
+This is useful for large contexts that exceed Telegram's message size limit.
+
+#### Using the Consul AI Assistant
+
+**Direct questions with conversation context:**
+```
+/consul What role can utility token play in Aritect platform? How can utility token contribute to growth?
+```
+The bot analyzes the **last 10 messages** in the chat to understand the conversation context before answering.
+
+**Reply-based interaction with focused context:**
+1. Reply to any message with `/consul what do you think about this?`.
+2. The bot analyzes **±5 messages around the target message** for context.
+3. The bot responds with AI-generated insights, also using reply.
+
+**Context analysis features:**
+- **Without reply**: Analyzes last 10 messages to understand ongoing discussion.
+- **With reply**: Analyzes ±5 messages around the target message for focused context.
+- Messages are truncated to 200 characters each to optimize token usage.
+- Usernames are preserved for context attribution
+
+The AI uses:
+- System prompt (hardcoded, cannot be overridden).
+- Custom context (set via `/set_llm_context`).
+- Conversation history (automatic, based on recent messages).
+
 ## Getting Started
 
 ### Prerequisites
@@ -162,7 +205,7 @@ All settings are stored per-chat, allowing each community to have its own config
 - Docker (optional, for containerized deployment).
 - Telegram Bot Token (obtain from [@BotFather](https://t.me/BotFather)).
 - Helius API key (for Solana RPC, optional for buy bot functionality).
-- LLM API key (Groq or OpenAI, optional for `/summary` command).
+- LLM API key (Groq or OpenAI, optional for `/summary` and `/consul` commands).
 
 ### Configuration
 

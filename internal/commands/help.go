@@ -20,7 +20,8 @@ func Help(c *router.Context) {
 		"/up - Give a point (reply to a message).\n" +
 		"/leaderboard - View top contributors.\n\n" +
 		"<b>AI:</b>\n" +
-		"/summary - Get AI summary of recent messages."
+		"/summary - Get AI summary of recent messages.\n" +
+		"/consul - Get AI response to a question."
 
 	if c.IsManager() {
 		adminHelp := "\n\n<b>Admin:</b>\n" +
@@ -28,7 +29,8 @@ func Help(c *router.Context) {
 			"/set - Configure settings.\n" +
 			"/clear - Clear all settings.\n" +
 			"/define_thread_id - Set thread.\n" +
-			"/retransmit - Broadcast message."
+			"/retransmit - Broadcast message.\n" +
+			"/set_llm_context - Set LLM context."
 		c.SendAnswer(baseHelp + adminHelp)
 	} else {
 		c.SendAnswer(baseHelp)

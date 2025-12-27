@@ -23,6 +23,7 @@ type OutputMessage struct {
 	ThreadId                    int
 	Recipient                   *model.Recipient
 	WithoutNotificationForGroup bool
+	ReplyToMessageID            int
 }
 
 func New(token string, pollingTimeout int) (*Bot, error) {
@@ -99,6 +100,10 @@ func (b *Bot) Send(message interface{}) {
 			b.options.ThreadID = m.Recipient.ThreadId
 		}
 
+		if m.ReplyToMessageID != 0 {
+			b.options.ReplyTo = &telebot.Message{ID: m.ReplyToMessageID}
+		}
+
 		_, err := b.Bot.Send(m.Recipient, m.Text, b.options)
 		if err != nil {
 
@@ -129,7 +134,20 @@ func (b *Bot) SendWithLimit(recipient *model.Recipient, text string, needReply b
 	})
 }
 
+func (b *Bot) SendWithLimitAndReply(recipient *model.Recipient, text string, needReply bool, sameThread bool, threadId int, withoutNotionficationForGroup bool, replyToMessageID int) {
+	b.sender.Send(recipient.Id, OutputMessage{
+		Text:                        text,
+		ThreadId:                    threadId,
+		SameThread:                  sameThread,
+		NeedReply:                   needReply,
+		Recipient:                   recipient,
+		WithoutNotificationForGroup: withoutNotionficationForGroup,
+		ReplyToMessageID:            replyToMessageID,
+	})
+}
+
 func (b *Bot) reset() {
 	b.options.ReplyMarkup.Selective = false
 	b.options.ReplyMarkup.ForceReply = false
+	b.options.ReplyTo = nil
 }

@@ -20,7 +20,9 @@ func retransmitHandler(c *router.Context) {
 		return
 	}
 
-	message := c.GetArgString()
+	message := c.GetArgStringWithNewlines()
+
+	log.Println(message)
 
 	recipients := model.FindAllRecipients()
 	sentCount := 0
