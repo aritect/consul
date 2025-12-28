@@ -98,7 +98,13 @@ func Consul(c *router.Context) {
 	client := llm.NewClient(provider, c.Config.LLMAPIKey, c.Config.LLMModel)
 
 	systemPrompt := buildSystemPrompt(customContext)
-	userPrompt := buildUserPrompt(userQuestion, conversationContext, c.Message.ReplyTo, isReplyToBot)
+
+	var targetMessageText string
+	if c.Message.ReplyTo != nil && !isReplyToBot {
+		targetMessageText = c.Message.ReplyTo.Text
+	}
+
+	userPrompt := buildUserPrompt(userQuestion, conversationContext, targetMessageText, isReplyToBot)
 
 	messages := []llm.ChatMessage{
 		{
@@ -172,19 +178,37 @@ IMPORTANT: The context provided may contain markdown formatting. You must read a
 	return basePrompt
 }
 
-func buildUserPrompt(question string, conversationContext []*model.Message, replyTo interface{}, isReplyToBot bool) string {
+func buildUserPrompt(question string, conversationContext []*model.Message, targetMessageText string, isReplyToBot bool) string {
+	var prompt string
+
+	if targetMessageText != "" {
+		prompt = fmt.Sprintf("Target message to analyze:\n\"%s\"\n\n", targetMessageText)
+		prompt += fmt.Sprintf("User question about this message: %s\n\n", question)
+
+		if len(conversationContext) > 0 {
+			prompt += "Additional conversation context (±5 messages around the target):\n\n"
+			for i, msg := range conversationContext {
+				name := msg.SenderName
+				if name == "" {
+					name = "Anonymous"
+				}
+				if msg.SenderUsername != "" {
+					name = "@" + msg.SenderUsername
+				}
+				prompt += fmt.Sprintf("[%d] %s: %s\n", i+1, name, truncateText(msg.Text, 200))
+			}
+		}
+
+		prompt += "\nIMPORTANT: Answer the user's question specifically about the target message. Use the additional context only if relevant."
+		return prompt
+	}
+
 	if len(conversationContext) == 0 {
 		return question
 	}
 
-	var prompt string
-
-	if replyTo != nil {
-		if isReplyToBot {
-			prompt = "Previous conversation history (±5 messages around your last response):\n\n"
-		} else {
-			prompt = "Recent conversation context (±5 messages around the target message):\n\n"
-		}
+	if isReplyToBot {
+		prompt = "Previous conversation history (±5 messages around your last response):\n\n"
 	} else {
 		prompt = "Recent conversation context (last 10 messages):\n\n"
 	}
